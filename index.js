@@ -1,20 +1,23 @@
 const nodemailer = require("nodemailer")
 const express = require("express");
 const cors = require("cors");
-// Método de config cloudinary
+const jwt = require("jsonwebtoken");
+
 const { configCloudinary } = require('./src/utils/cloudinary/config.js');
 const { connect } = require("./src/utils/db.js");
 
-const UserRoutes = require('./src/api/users/users.routes.js')
+const UserRoutes = require('./src/api/users/users.routes')
 
 connect();
 
 const dotenv = require('dotenv');
-const ProjectRoutes = require("./src/api/projects/projects.routes.js");
-// Ejecutamos método para usar .env
+const ProductRoutes = require("./src/api/products/products.routes.js");
+const NewsRoutes = require("./src/api/news/news.routes.js");
+const CoursesRoutes = require("./src/api/courses/courses.routes.js");
+
 dotenv.config();
  
-// Ejecutar la configuación de cloudinary
+
 configCloudinary();
 
 const app = express();
@@ -27,12 +30,6 @@ app.use((req, res, next) => {
   next();
 });
 
-// app.use("*", (req, res, next) => {
-//   const error = new Error();
-//   error.status = 404;
-//   error.message = "Route not found";
-//   return next(error);
-// });
 
 app.use(
   cors({
@@ -42,7 +39,9 @@ app.use(
 
 //Routes
 app.use('/api/users', UserRoutes)
-app.use('/api/projects', ProjectRoutes)
+app.use('/api/products', ProductRoutes)
+app.use('/api/news', NewsRoutes)
+app.use('/api/courses', CoursesRoutes)
 app.use("/public", express.static("public"));
 app.use("/api", (req, res, next) => "im alive");
 
